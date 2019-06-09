@@ -9,7 +9,7 @@ services:
     links:
       - "php" 
   php:
-    image: "php:fpm"
+    build: "./php"
     links: 
       - "redis"
       - "mariadb"
