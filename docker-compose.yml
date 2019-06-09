@@ -14,15 +14,14 @@ services:
       - "redis"
       - "mariadb"
     volumes:
-      - "/Volumes/Docker/Work/PayBee:/var/www/html"
+      - "/var/www/paybee:/var/www/html"
   redis: 
     image: "redis:latest"
     command: "--appendonly yes"
   mariadb:
     image: "mariadb:latest"
-    # volumes:
-      # - "./mariadb/data:/var/lib/mysql"
-      # - "./mariadb/my.cnf:/root/my.cnf"
+    volumes:
+      - "./mariadb/data:/var/lib/mysql"
     environment:
       MYSQL_ROOT_PASSWORD: "qq3VUaECCl+ysl"
       MYSQL_DATABASE: paybee
