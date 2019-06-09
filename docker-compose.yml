@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+  nginx:
+    build: "./nginx"
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - "php" 
+  php:
+    image: "php:fpm"
+    links: 
+      - "redis"
+      - "mariadb"
+    volumes:
+      - "/Volumes/Docker/Work/PayBee:/var/www/html"
+  redis: 
+    image: "redis:latest"
+    command: "--appendonly yes"
+  mariadb:
+    image: "mariadb:latest"
+    # volumes:
+      # - "./mariadb/data:/var/lib/mysql"
+      # - "./mariadb/my.cnf:/root/my.cnf"
+    environment:
+      MYSQL_ROOT_PASSWORD: "qq3VUaECCl+ysl"
+      MYSQL_DATABASE: paybee
+      MYSQL_USER: paybee
+      MYSQL_PASSWORD: "G&DZLmE1sUAY"
