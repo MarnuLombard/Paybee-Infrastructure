@@ -30,3 +30,5 @@ services:
       MYSQL_DATABASE: paybee
       MYSQL_USER: paybee
       MYSQL_PASSWORD: "G&DZLmE1sUAY"
+    ports:
+      - "3306"
