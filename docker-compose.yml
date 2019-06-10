@@ -8,6 +8,9 @@ services:
       - "443:443"
     links:
       - "php" 
+    # Allow for the serving of static assets through nginx
+    volumes:
+      - "/var/www/paybee:/var/www/html"
   php:
     build: "./php"
     links: 
