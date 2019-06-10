@@ -9,7 +9,6 @@ cd $PROJECT_PATH \
     && chown -R www-data:www-data storage/ \
     && php artisan config:cache \
     && php artisan view:cache \
-    && php artisan route:cache \
     && php artisan migrate
 
 # Run default php:fpm container process
