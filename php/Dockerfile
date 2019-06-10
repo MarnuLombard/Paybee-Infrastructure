@@ -20,12 +20,15 @@ RUN set -x \
     && ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime \
     && dpkg-reconfigure tzdata -f noninteractive \ 
 # Composer
-    && apt-get install -y wget \
+    && apt-get install -y wget zip zlib1g-dev libzip-dev git \
     && chmod +x /tmp/install_composer.sh \ 
     && /tmp/install_composer.sh \
 # Mysql extension
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-enable pdo_mysql\
+# Zip extension
+    && docker-php-ext-install zip \
+    && docker-php-ext-enable zip\
 # Make startup script executable
     && chmod +x /usr/local/bin/start.sh \
 # Allow for copy paste `sudo ...` commands
