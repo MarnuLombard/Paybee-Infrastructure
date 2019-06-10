@@ -4,10 +4,10 @@ MAINTAINER Marnu Lombard <marnu@mar.nu>
 # Add RSA sources for debian packages for faster builds
 ADD ./sources.list /etc/apt/sources.list
 # Add our nginx site config
-ADD ./nginx.conf /etc/nginx/
-ADD ./sites-enabled /etc/nginx/
+ADD ./nginx.conf /etc/nginx/nginx.conf
+ADD ./sites-enabled/ /etc/nginx/sites-enabled/
 # Add the startup script
-ADD ./start.sh /
+ADD ./start.sh /start.sh
 
 RUN set -x \ 
     && apt-get update  \
