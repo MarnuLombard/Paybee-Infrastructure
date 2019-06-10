@@ -7,17 +7,25 @@ services:
       - "80:80"
       - "443:443"
     links:
-      - "php" 
+      - "php"
+      - "certbot"
     # Allow for the serving of static assets through nginx
     volumes:
-      - "/var/www/paybee:/var/www/html"
+      - "./nginx/www/paybee:/var/www/html"
+      - "./certbot/certificates:/etc/certificates"
+      - "./nginx/www/letsencrypt:/var/www/letsencrypt"
+    healthcheck:
+      test: ["CMD", "test", "-f", "/etc/certificates/live/paybee.co.za/fullchain.pem"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
   php:
     build: "./php"
     links: 
       - "redis"
       - "mariadb"
     volumes:
-      - "/var/www/paybee:/var/www/html"
+      - "./nginx/www/paybee:/var/www/html"
   redis: 
     image: "redis:latest"
     command: "--appendonly yes"
@@ -32,3 +40,9 @@ services:
       MYSQL_PASSWORD: "G&DZLmE1sUAY"
     ports:
       - "3306"
+  certbot:
+    image: "certbot/certbot:latest"
+    volumes:
+      - "./certbot/certificates:/etc/certificates"
+      - "./nginx/www/letsencrypt:/var/www/.well-known"
+    command: "certonly --agree-tos --email marnulombard@gmail.com --renew-by-default --webroot -w /var/www -d paybee.co.za"

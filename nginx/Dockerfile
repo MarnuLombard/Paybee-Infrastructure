@@ -6,10 +6,8 @@ ADD ./sources.list /etc/apt/sources.list
 # Add our nginx site config
 ADD ./nginx.conf /etc/nginx/nginx.conf
 ADD ./sites-enabled/ /etc/nginx/sites-enabled/
-# Add the startup script
-ADD ./start.sh /start.sh
 
-RUN set -x \ 
+RUN set -x \
     && apt-get update  \
     && apt-get install apt-utils -qy  \
     && apt-get install -y locales lsb-release \
@@ -20,9 +18,6 @@ RUN set -x \
 # Timezone
     && ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime \
     && dpkg-reconfigure tzdata -f noninteractive \ 
-    && apt-get install -y \
-# Install Certbot
-        certbot python-certbot-nginx -t stretch-backports \
 # Set empty base site
     && mkdir -p /var/www/html/public \
     && echo "<?php exit();" > /var/www/html/public/index.php \
@@ -31,5 +26,3 @@ RUN set -x \
 # Clean
     && apt-get autoremove -qy \
     && apt-get autoclean -qy
-
-CMD ["/start.sh"]
