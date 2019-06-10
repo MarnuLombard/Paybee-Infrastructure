@@ -9,23 +9,20 @@ services:
     links:
       - "php"
       - "certbot"
-    # Allow for the serving of static assets through nginx
     volumes:
-      - "./nginx/www/paybee:/var/www/html"
-      - "./certbot/certificates:/etc/certificates"
-      - "./nginx/www/letsencrypt:/var/www/letsencrypt"
-    healthcheck:
-      test: ["CMD", "test", "-f", "/etc/certificates/live/paybee.co.za/fullchain.pem"]
-      interval: 10s
-      timeout: 10s
-      retries: 20
+      # Allow for the serving of static assets through nginx
+      - "./nginx/www:/var/www/html"
+      - "./certbot/conf:/etc/letsencrypt"
+      - "./certbot/www:/var/www/certbot"
+    # reload nginx every 6 hour to pull in a new certificate
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
   php:
     build: "./php"
     links: 
       - "redis"
       - "mariadb"
     volumes:
-      - "./nginx/www/paybee:/var/www/html"
+      - "./nginx/www:/var/www/html"
   redis: 
     image: "redis:latest"
     command: "--appendonly yes"
@@ -43,6 +40,6 @@ services:
   certbot:
     image: "certbot/certbot:latest"
     volumes:
-      - "./certbot/certificates:/etc/certificates"
-      - "./nginx/www/letsencrypt:/var/www/.well-known"
-    command: "certonly --agree-tos --email marnulombard@gmail.com --renew-by-default --webroot -w /var/www -d paybee.co.za"
+      - "./certbot/conf:/etc/letsencrypt"
+      - "./certbot/www:/var/www/certbot"
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
