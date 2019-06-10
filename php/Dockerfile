@@ -22,6 +22,7 @@ RUN set -x \
 # Composer
     && apt-get install -y wget \
     && chmod +x /tmp/install_composer.sh \ 
+    && /tmp/install_composer.sh \
 # Mysql extension
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-enable pdo_mysql\
