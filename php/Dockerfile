@@ -5,6 +5,8 @@ MAINTAINER Marnu Lombard <marnu@mar.nu>
 ADD ./sources.list /etc/apt/sources.list
 # Script to automate installing composer
 ADD ./install_composer.sh /tmp/install_composer.sh
+# Startup Script
+ADD ./start.sh /usr/local/bin/start.sh
 
 RUN set -x \ 
     && apt-get update  \
@@ -19,5 +21,17 @@ RUN set -x \
     && dpkg-reconfigure tzdata -f noninteractive \ 
 # Composer
     && apt-get install -y wget \
-    && chmod +x /tmp/install_composer.sh \
-    && /tmp/install_composer.sh
+    && chmod +x /tmp/install_composer.sh \ 
+# Mysql extension
+    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-enable pdo_mysql\
+# Make startup script executable
+    && chmod +x /usr/local/bin/start.sh \
+# Allow for copy paste `sudo ...` commands
+    && echo 'function sudo { true && "$@"; }' >> ~/.bashrc \
+# Clean
+    && docker-php-source delete \
+    && apt-get autoremove -qy \
+    && apt-get autoclean -qy
+
+CMD ["/usr/local/bin/start.sh"]
