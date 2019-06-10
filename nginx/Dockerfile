@@ -24,7 +24,12 @@ RUN set -x \
 # Install Certbot
         certbot python-certbot-nginx -t stretch-backports \
 # Set empty base site
-    && mkdir -p /var/www/html \
-    && echo "<?php exit();" > /var/www/html/index.php 
+    && mkdir -p /var/www/html/public \
+    && echo "<?php exit();" > /var/www/html/public/index.php \
+# Allow for copy paste `sudo ...` commands
+    && echo 'function sudo { true && "$@"; }' >> ~/.bashrc \
+# Clean
+    && apt-get autoremove -qy \
+    && apt-get autoclean -qy
 
 CMD ["/start.sh"]
